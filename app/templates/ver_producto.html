@@ -1,0 +1,142 @@
+{% extends 'layout.html' %}
+
+{% block titulo %} Listar Productos {% endblock %}
+
+{% block contenido %} 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<div class="ver-ventas-container">
+    <h2>Productos disponibles</h2>
+
+    <div class="contenedor-productos">
+        {% for producto in productos %}
+            <div class="producto-card">
+                {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                {% endif %}
+            <h3>{{ producto.nombre }}</h3>
+
+            <div class="detalle-producto">
+                <p><strong>Autor:</strong> {{ producto.autor }}</p>
+                <p><strong>Precio:</strong> ₡{{ producto.precio }}</p>
+                <p><strong>Stock:</strong> {{ producto.cantidad_stock }}</p>
+                <p><strong>Categoría:</strong> {{ producto.categoria.nombre }}</p>
+                <p><strong>Fecha de Publicación:</strong> {{ producto.fecha_publicacion }}</p>
+            </div>
+
+            <!-- Acordeón de descripción -->
+            <div class="accordion" id="acordeonDescripcion{{ producto.id }}">
+                <div class="card">
+                    <div class="card-header p-0" id="headingDesc{{ producto.id }}">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                    data-target="#collapseDesc{{ producto.id }}" aria-expanded="false"
+                                    aria-controls="collapseDesc{{ producto.id }}">
+                                Ver descripción
+                            </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapseDesc{{ producto.id }}" class="collapse" aria-labelledby="headingDesc{{ producto.id }}"
+                        data-parent="#acordeonDescripcion{{ producto.id }}">
+                        <div class="card-body">
+                            {{ producto.descripcion }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                {% if request.session.rol == 'admin' %}
+
+                <p>
+                    <a href="{% url 'borrar_producto' id=producto.id %}" class="btn btn-danger">Eliminar</a>
+                    <!-- Botón para abrir el modal de edición -->
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#modalEditarProducto{{ producto.id }}">
+                        Editar
+                    </button>
+                </p>
+
+                {% endif %}
+
+                <!-- Modal de Edición -->
+                <div class="modal fade" id="modalEditarProducto{{ producto.id }}" tabindex="-1" role="dialog" aria-labelledby="modalEditarProductoLabel{{ producto.id }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                            <!-- Encabezado -->
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditarProductoLabel{{ producto.id }}">Editar Producto</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <!-- Formulario de edición -->
+                            <form method="POST" action="{% url 'editar_producto' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+
+                                <input type="hidden" name="producto_id" value="{{ producto.id }}">
+
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="nombre{{ producto.id }}">Nombre:</label>
+                                        <input type="text" name="nombre" id="nombre{{ producto.id }}" class="form-control" value="{{ producto.nombre }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="autor{{ producto.id }}">Autor:</label>
+                                        <input type="text" name="autor" id="autor{{ producto.id }}" class="form-control" value="{{ producto.autor }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="precio{{ producto.id }}">Precio:</label>
+                                        <input type="number" name="precio" id="precio{{ producto.id }}" class="form-control" value="{{ producto.precio}}" step="0.01" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="fecha_publicacion{{ producto.id }}">fecha Publicacion:</label>
+                                        <input type="date" name="fecha_publicacion" id="fecha_publicacion{{ producto.id }}" class="form-control" value="{{ producto.fecha_publicacion|date:'Y-m-d' }}" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="cantidad{{ producto.id }}">Cantidad en Stock:</label>
+                                        <input type="number" name="cantidad_stock" id="cantidad{{ producto.id }}" class="form-control" value="{{ producto.cantidad_stock }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="categoria{{ producto.id }}">Categoría:</label>
+                                        <select name="categoria" id="categoria{{ producto.id }}" class="form-control" required>
+                                            {% for cat in categorias %}
+                                                <option value="{{ cat.id }}" {% if cat.id == producto.categoria.id %}selected{% endif %}>
+                                                    {{ cat.nombre }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="descripcion{{ producto.id }}">Descripción:</label>
+                                        <textarea name="descripcion" id="descripcion{{ producto.id }}" class="form-control" rows="4" required>{{ producto.descripcion }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="imagen{{ producto.id }}">Imagen:</label>
+                                        <input type="file" name="imagen" id="imagen{{ producto.id }}" class="form-control-file">
+                                    </div>
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No hay productos registrados.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock %}

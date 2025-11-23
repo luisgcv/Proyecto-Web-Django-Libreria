@@ -1,0 +1,170 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}Crear Venta{% endblock %}
+
+{% block contenido %}
+
+<div class="formulario-personalizado">
+    <h1>Crear Venta</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if mensaje %}
+        <p style="color: red; font-weight: bold;">{{ mensaje }}</p>
+        <a href="{% url 'crear_cliente' %}" class="btn">Crear Cliente</a>
+    {% else %}
+        <form id="formularioVenta" method="POST" action="{% url 'guardar_venta' %}">
+            {% csrf_token %}
+
+            <label for="cliente">Cliente:</label>
+            <select name="cliente" id="cliente" required>
+                <option value="">Seleccione un cliente</option>
+                
+                {% for c in cliente %}
+                    <option value="{{ c.id }}">{{ c.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="tipo_venta">Tipo de Venta:</label>
+            <select name="tipo_venta" id="tipo_venta" required>
+                <option value="">Seleccione el tipo de venta</option>
+                {% for t in tipo_venta %}
+                    <option value="{{ t.id }}">{{ t.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="observaciones">Observaciones:</label>
+            <textarea name="observaciones" id="observaciones" rows="3"></textarea>
+
+            <h4>Agregar Productos</h4>
+
+            <label for="producto">Producto:</label>
+            <select name="producto" id="producto">
+                <option value="">Seleccione un producto</option>
+                {% for p in producto %}
+                    <option value="{{ p.id }}" data-precio="{{ p.precio }}" data-stock="{{ p.cantidad_stock }}">
+                        {{ p.nombre }}, (stock: {{ p.cantidad_stock }})
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" id="cantidad" min="1">
+
+            <button type="button" onclick="agregarProducto()">Agregar Producto</button>
+
+            <h4>Detalle de Venta</h4>
+            <table id="detalleVenta">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio Unitario</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h3>Total: ₡<span id="totalVenta">0.00</span></h3>
+            <input type="hidden" name="total" id="total">
+            <input type="hidden" name="productos" id="productos">
+
+            <button type="submit">Finalizar Venta</button>
+        </form>
+    {% endif %}
+</div>
+
+<script>
+    let detalle = [];
+    let totalVenta = 0;
+    let stockInicial = {};
+
+    window.onload = function () {
+        const select = document.getElementById('producto');
+        for (let i = 0; i < select.options.length; i++) {
+            const option = select.options[i];
+            if (option.value) {
+                stockInicial[option.value] = parseInt(option.dataset.stock);
+            }
+        }
+    };
+
+    function agregarProducto() {
+        const select = document.getElementById('producto');
+        const cantidadInput = document.getElementById('cantidad');
+        const productoId = select.value;
+        const productoNombre = select.options[select.selectedIndex].text.split(' (')[0];
+        const precio = parseFloat(select.options[select.selectedIndex].dataset.precio);
+        const cantidad = parseInt(cantidadInput.value);
+
+        if (!productoId || cantidad <= 0 || isNaN(cantidad)) {
+            alert('Seleccione un producto y una cantidad válida.');
+            return;
+        }
+
+        let existente = detalle.find(item => item.id == productoId);
+        let cantidadEnCarrito = existente ? existente.cantidad : 0;
+
+        if ((cantidadEnCarrito + cantidad) > stockInicial[productoId]) {
+            let disponibles = stockInicial[productoId] - cantidadEnCarrito;
+            alert(`No hay suficiente stock disponible. Solo quedan ${disponibles} unidades disponibles.`);
+            return;
+        }
+
+        if (existente) {
+            existente.cantidad += cantidad;
+            existente.subtotal = existente.cantidad * existente.precio;
+        } else {
+            detalle.push({
+                id: productoId,
+                nombre: productoNombre,
+                precio: precio,
+                cantidad: cantidad,
+                subtotal: cantidad * precio
+            });
+        }
+
+        actualizarTabla();
+        cantidadInput.value = '';
+        select.value = '';
+    }
+
+    function actualizarTabla() {
+        const tbody = document.querySelector('#detalleVenta tbody');
+        tbody.innerHTML = '';
+        totalVenta = 0;
+
+        detalle.forEach((item, index) => {
+            totalVenta += item.subtotal;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>${item.nombre}</td>
+                    <td>₡${item.precio.toFixed(2)}</td>
+                    <td>${item.cantidad}</td>
+                    <td>₡${item.subtotal.toFixed(2)}</td>
+                    <td><button type="button" onclick="eliminarProducto(${index})">Eliminar</button></td>
+                </tr>
+            `;
+        });
+
+        document.getElementById('totalVenta').innerText = totalVenta.toFixed(2);
+        document.getElementById('total').value = totalVenta.toFixed(2);
+        document.getElementById('productos').value = JSON.stringify(detalle);
+    }
+
+    function eliminarProducto(index) {
+        detalle.splice(index, 1);
+        actualizarTabla();
+    }
+</script>
+
+{% endblock %}

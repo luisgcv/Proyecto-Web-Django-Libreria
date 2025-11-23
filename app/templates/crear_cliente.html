@@ -1,0 +1,36 @@
+{%extends 'layout.html'%}
+
+{% block titulo %} Crear Clientes {% endblock %}
+
+
+{% block contenido %} 
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow rounded">
+                <div class="card-header text-center">
+                    <h4>Iniciar Sesión</h4>
+                </div>
+               
+                {% if formulario.errors %}
+                    <div class="alert alert-danger m-3">
+                        <strong>Error:</strong> Verifica los campos e intenta nuevamente.
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <form method="POST" action="{% url 'guardar_cliente' %}">
+                        {% csrf_token %}
+
+                        {{ formulario.as_p }}
+
+                        <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+                    </form>
+ 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

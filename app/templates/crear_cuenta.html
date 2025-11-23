@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Cuenta</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+</head>
+<body class="bg-light">
+
+<div class="login-container"> <!-- Reutilizamos el mismo contenedor -->
+
+    <div class="login-card"> <!-- Mismo tamaño y estilo que el login -->
+        <div class="card shadow rounded">
+            <div class="card-header text-center">
+                <h4>Crear Cuenta</h4>
+            </div>
+
+            <div class="mensajes">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="message">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="card-body">
+                <form method="POST" action="{% url 'guardar_usuario' %}">
+                    {% csrf_token %}
+
+                    {{ formulario.as_p }}
+
+                    <input type="submit" value="Guardar" class="btn-login" />
+
+                </form>
+                <a href="{% url 'login' %}" class="btn-regresar">Regresar</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

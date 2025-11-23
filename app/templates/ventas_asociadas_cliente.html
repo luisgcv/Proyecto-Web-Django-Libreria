@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block titulo %} Ventas por Cliente {% endblock %}
+
+{% block contenido %}
+
+<div class="ventas-asociadas container mt-5">
+    <h2 class="text-center mb-5">Ventas Asociadas a Clientes</h2>
+
+    <div class="row">
+        {% for cliente in clientes %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow cliente-card">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ cliente.nombre }}</h4>
+                        <p><strong>Correo:</strong> {{ cliente.correo_electronico }}</p>
+                        <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+
+                        {% if cliente.venta_set.all %}
+                            <h5 class="mt-4 mb-3 ventas-titulo">Ventas</h5>
+                            {% for venta in cliente.venta_set.all %}
+                                <div class="venta-box p-3 mb-4">
+                                    <p><strong>Venta #{{ venta.id }}</strong></p>
+                                    <p><strong>Fecha:</strong> {{ venta.fecha }}</p>
+                                    <p><strong>Total:</strong> ₡{{ venta.total }}</p>
+
+                                    <h6 class="productos-titulo mt-3 mb-2">Productos:</h6>
+                                    <ul class="list-group">
+                                        {% for detalle in venta.detalleventa_set.all %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {{ detalle.producto.nombre }} - ₡{{ detalle.producto.precio }}
+                                                <span class="badge badge-primary badge-pill">x{{ detalle.cantidad }}</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted mt-3">Este cliente no tiene ventas registradas.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center">No hay clientes registrados.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

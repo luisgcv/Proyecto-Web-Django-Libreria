@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+{% block contenido %}
+<div class="Estadisticas">
+    <h1>Estadísticas de Ventas</h1>
+    <p>Total Ventas: {{ total_ventas }}</p>
+    <p>Cantidad de Ventas: {{ cantidad_ventas }}</p>
+    <img src="data:image/png;base64,{{ graphic }}" />
+</div>
+{% endblock contenido %}

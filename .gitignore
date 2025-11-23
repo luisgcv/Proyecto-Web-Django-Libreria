@@ -1,0 +1,18 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+
+# Venv
+venv/
+env/
+ENV/
+
+# VSCode
+.vscode/
+
+# Migrations (OPTIONAL – si quieres subirlas elimina esta línea)
+**/migrations/

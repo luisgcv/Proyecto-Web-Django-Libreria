@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block titulo %} Ver Clientes {% endblock %}
+
+{% block contenido %} 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<h2>Clientes disponibles</h2>
+
+<div class="contenedor-clientes">
+    {% for cliente in clientes %}
+        <div class="cliente-card border p-3 mb-3 rounded">
+            <h4>{{ cliente.nombre }}</h4>
+            <p><strong>Correo:</strong> {{ cliente.correo_electronico }}</p>
+            <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+
+            <p>
+                <a href="{% url 'borrar_cliente' id=cliente.id %}" class="btn btn-danger">Eliminar</a>
+
+                <!-- Botón para abrir el modal de edición -->
+                <button class="btn btn-primary" data-toggle="modal" data-target="#modalEditarCliente{{ cliente.id }}">
+                    Editar
+                </button>
+            </p>
+
+            <!-- Modal de Edición -->
+            <div class="modal fade" id="modalEditarCliente{{ cliente.id }}" tabindex="-1" role="dialog" aria-labelledby="modalEditarClienteLabel{{ cliente.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+
+                        <!-- Encabezado -->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalEditarClienteLabel{{ cliente.id }}">Editar Cliente</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <!-- Formulario de edición -->
+                        <form method="POST" action="{% url 'editar_cliente' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="cliente_id" value="{{ cliente.id }}">
+
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="nombre{{ cliente.id }}">Nombre:</label>
+                                    <input type="text" name="nombre" id="nombre{{ cliente.id }}" class="form-control" value="{{ cliente.nombre }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="correo{{ cliente.id }}">Correo Electrónico:</label>
+                                    <input type="email" name="correo_electronico" id="correo{{ cliente.id }}" class="form-control" value="{{ cliente.correo_electronico }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="telefono{{ cliente.id }}">Teléfono:</label>
+                                    <input type="text" name="telefono" id="telefono{{ cliente.id }}" class="form-control" value="{{ cliente.telefono }}" required>
+                                </div>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No hay clientes registrados.</p>
+    {% endfor %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock %}

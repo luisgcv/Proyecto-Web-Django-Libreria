@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% block titulo %}Inicio{% endblock %}
+
+{% block contenido %}
+<div class="home-container-sin-imagen">
+    <h1>Bienvenido {{usuario.nombre_usuario}} a Librería LibLGJ</h1>
+    <p>Ubicados en <strong>Grecia, Alajuela</strong>. Nos especializamos en brindar libros de calidad que inspiran, educan y entretienen. ¡Gracias por visitarnos!</p>
+
+    <div class="home-botones">
+        <a href="{% url 'listar_productos' %}" class="btn">Explorar Libros</a>
+        {% if request.session.rol == 'admin' %}
+        <a href="{% url 'listar_ventas' %}" class="btn">Ver Ventas</a>
+        {% endif %}
+    </div>
+
+    <div class="home-informacion">
+        <h2>Sobre Nosotros</h2>
+        <p>En Librería LibLGJ, promovemos la lectura como herramienta para el crecimiento personal y profesional. Nuestro catálogo abarca desde literatura clásica hasta las últimas novedades.</p>
+
+        <h2>Contáctanos</h2>
+        <p>Ubicación: Grecia, Alajuela, Costa Rica</p>
+        <p>Horario: Lunes a Viernes, 9:00 a.m. - 6:00 p.m.</p>
+        <p>Correo: contacto@librerialiblgj.com</p>
+    </div>
+</div>
+{% endblock %}

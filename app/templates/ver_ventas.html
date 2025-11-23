@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}Listado de Ventas{% endblock %}
+
+{% block contenido %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="message">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="ver-ventas-container">
+    <h1>Listado de Ventas</h1>
+
+    {% if ventas %}
+        {% for venta in ventas %}
+            <div class="venta-card">
+                <strong>Venta #{{ venta.id }}</strong>
+                <p><strong>Cliente:</strong> {{ venta.cliente.nombre }}</p>
+                <p><strong>Tipo de Venta:</strong> {{ venta.tipo_venta.nombre }}</p>
+                <p><strong>Fecha:</strong> {{ venta.fecha }}</p>
+                <p><strong>Total:</strong> ₡{{ venta.total }}</p>
+
+                <div class="detalle-productos">
+                    <p><strong>Productos:</strong></p>
+                    {% for detalle in venta.detalleventa_set.all %}
+                        <p>{{ detalle.producto.nombre }} - ₡{{ detalle.producto.precio }} | Cantidad: <span>{{ detalle.cantidad }}</span></p>
+                    {% endfor %}
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <a href="{% url 'generar_factura' venta.id %}" class="btn">Ver Factura</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="sin-ventas">No hay ventas registradas.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

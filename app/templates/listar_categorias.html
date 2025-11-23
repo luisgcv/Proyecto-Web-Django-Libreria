@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+
+{% block titulo %} Ver Categorías {% endblock %}
+
+{% block contenido %} 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+<h2>Categorías disponibles</h2>
+
+<div class="contenedor-categorias">
+    {% for categoria in categorias %}
+        <div class="categoria-card">
+            <h3>{{ categoria.nombre }}</h3>
+            <p><strong>ID:</strong> {{ categoria.id }}</p>
+            <p><strong>Descripción:</strong> {{ categoria.descripcion }}</p>
+
+            <!-- Botón para abrir modal -->
+            {% if request.session.rol == 'admin' %}
+            <button class="btn btn-primary" data-toggle="modal" data-target="#modalEditarCategoria{{ categoria.id }}">Editar</button>
+            {% endif %}
+        </div>
+
+        <!-- Modal de Edición de Categoría -->
+        <div class="modal fade" id="modalEditarCategoria{{ categoria.id }}" tabindex="-1" role="dialog" aria-labelledby="modalEditarCategoriaLabel{{ categoria.id }}" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <!-- Encabezado -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEditarCategoriaLabel{{ categoria.id }}">Editar Categoría</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- Formulario de edición -->
+                    <form method="POST" action="{% url 'editar_categoria' %}">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="categoria_id" value="{{ categoria.id }}">
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="nombre{{ categoria.id }}">Nombre:</label>
+                                <input type="text" name="nombre" id="nombre{{ categoria.id }}" class="form-control" value="{{ categoria.nombre }}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="descripcion{{ categoria.id }}">Descripción:</label>
+                                <textarea name="descripcion" id="descripcion{{ categoria.id }}" class="form-control" required>{{ categoria.descripcion }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% if categorias|length == 0 %}
+    <p>No hay categorías registradas.</p>
+{% endif %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock %}

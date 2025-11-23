@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+</head>
+<body class="bg-light">
+
+<div class="login-container"> 
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card shadow rounded">
+                    <div class="card-header text-center">
+                        <h4>Iniciar Sesión</h4>
+                    </div>
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            Usuario o contraseña incorrectos.
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'login' %}">
+                            {% csrf_token %}
+
+                            {{formulario.as_p}}
+
+                            <input type="submit" value="Ingresar" class="btn btn-primary btn-block mt-3"/>
+                        </form>
+                    </div>
+
+                    <div class="card-footer text-center">
+                        <small>¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

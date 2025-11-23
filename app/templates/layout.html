@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+    {% block titulo %}Librería LibLGJ{% endblock %}
+    </title>
+
+
+
+    {%load static%}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+</head>
+<body>
+
+<header>
+    <div id="logotipo">
+        <img src="{% static 'imagenes/Logotipo.png' %}" alt="Logo Librería LibLGJ">
+        <div class="titulo-header">
+            <h1>Librería Lib-LGJ</h1>
+            <p class="slogan">Tu espacio favorito para leer y aprender</p>
+        </div>
+    </div>
+
+    <div class="user-controls">
+        <a href="{% url 'home' %}" class="btn-home">
+            <i class="fas fa-home"></i> Inicio
+        </a>
+        <a href="{% url 'logout' %}" class="btn-logout">
+            <i class="fas fa-sign-out-alt"></i> Salir
+        </a>
+    </div>
+</header>
+<nav>
+    <ul>
+        <li>
+            <a href="{% url 'home' %}">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </li>
+
+        <!-- Menú desplegable para Productos -->
+        <li class="submenu">
+            <a href="#"><i class="fas fa-box-open"></i> Libros ▾</a>
+            <ul class="dropdown">
+                {% if request.session.rol == 'admin' %}
+                <li><a href="{% url 'crear_producto' %}"><i class="fas fa-plus-circle"></i> Crear Libro</a></li>
+                {% endif %}
+                <li><a href="{% url 'listar_productos' %}"><i class="fas fa-eye"></i> Ver Libros</a></li>
+            </ul>
+        </li>
+
+        <!-- Menú desplegable para Categorías -->
+        <li class="submenu">
+            <a href="#"><i class="fas fa-tags"></i> Categorías Libros ▾</a>
+            <ul class="dropdown">
+                {% if request.session.rol == 'admin' %}
+                <li><a href="{% url 'crear_categoria' %}"><i class="fas fa-plus-circle"></i> Crear categoría</a></li>
+                {% endif %}
+                <li><a href="{% url 'listar_categorias' %}"><i class="fas fa-eye"></i> Ver categorías</a></li>
+            </ul>
+        </li>
+
+        <!-- Menú desplegable para Clientes -->
+        <li class="submenu">
+            <a href="#"><i class="fas fa-users"></i> Clientes ▾</a>
+            <ul class="dropdown">
+                <li><a href="{% url 'crear_cliente' %}"><i class="fas fa-user-plus"></i> Crear Cliente</a></li>
+                <li><a href="{% url 'listar_clientes' %}"><i class="fas fa-address-book"></i> Listar Cliente</a></li>
+                <li><a href="{% url 'ventas_asociadas_cliente' %}"><i class="fas fa-link"></i> Ventas Asociadas</a></li>
+            </ul>
+        </li>
+
+        <!-- Menú desplegable para Ventas -->
+        <li class="submenu">
+            <a href="#"><i class="fas fa-shopping-cart"></i> Ventas ▾</a>
+            <ul class="dropdown">
+                <li><a href="{% url 'crear_venta' %}"><i class="fas fa-cart-plus"></i> Crear Venta</a></li>
+                {% if request.session.rol == 'admin' %}
+                <li><a href="{% url 'listar_ventas' %}"><i class="fas fa-list"></i> Listar Ventas</a></li>
+                {% endif %}
+                {% if request.session.rol == 'admin' %}
+                <li><a href="{% url 'crear_tipo_venta' %}"><i class="fas fa-file-alt"></i> Crear Tipo de Venta</a></li>
+                {% endif %}
+                <li><a href="{% url 'listar_tipos_venta' %}"><i class="fas fa-clipboard-list"></i> Listar Tipos de Venta</a></li>
+            </ul>
+        </li>
+
+        {% if request.session.rol == 'admin' %}
+        <!-- Menú visible solo para Admin -->
+        <li class="submenu">
+            <a href="#"><i class="fas fa-user-cog"></i> Usuarios ▾</a>
+            <ul class="dropdown">
+                <li><a href="{% url 'listar_usuarios' %}"><i class="fas fa-users-cog"></i> Listar Usuarios</a></li>
+                <li><a href="{% url 'crear_usuario' %}"><i class="fas fa-user-plus"></i> Crear Usuario</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="{% url 'estadisticas' %}">
+                <i class="fas fa-chart-bar"></i> Estadísticas
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+
+
+    <div id="contenido">
+        <div class="cajaContenido">
+                {% block contenido %}
+                    <strong>Contenido de página:</strong>
+                {% endblock %}
+        </div>
+    </div>
+<footer>
+    <div class="footer-content">
+        <p>
+            Desarrollo Django-Python-Html-Css &copy; Luis Campos, Génesis Castro, Jason Quesada
+            {% now "d/m/Y h:m:s" %}
+        </p>
+        <div class="footer-social">
+            <a href="#" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
