@@ -1,7 +1,7 @@
 # forms.py
 from django import forms
 from django.core.validators import MinLengthValidator, RegexValidator
-from app.models import Cliente, Tipo_Venta, Producto, Usuario
+from tienda.models import Cliente, Tipo_Venta, Producto, Usuario
 
 
 class LoginForm(forms.Form):

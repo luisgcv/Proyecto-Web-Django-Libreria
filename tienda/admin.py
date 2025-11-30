@@ -1,5 +1,5 @@
 from django.contrib import admin
-from app.models import Usuario, Producto, Categoria, Cliente, Tipo_Venta, DetalleVenta, Rol, Venta
+from tienda.models import Usuario, Producto, Categoria, Cliente, Tipo_Venta, DetalleVenta, Rol, Venta
 
 #admin.site.register(Usuario)
 admin.site.register(Producto)

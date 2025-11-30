@@ -1,10 +1,10 @@
 from django.apps import AppConfig
 
 
-class AppConfig(AppConfig):
+class TiendaConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'app'
+    name = 'tienda'
     verbose_name="Proyecto Web, Sitio de Libros"
 
     def ready(self):
-        import app.signals
+        import tienda.signals

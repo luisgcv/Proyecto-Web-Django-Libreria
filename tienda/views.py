@@ -1,8 +1,10 @@
 from django.shortcuts import render,redirect
-from app.forms import LoginForm,Sign_up_Form,Crear_Producto,Crear_Categoria,Crear_Cliente, Crear_Tipo_Venta
-from app.models import Usuario,Rol,Producto,Categoria,Cliente,Venta,DetalleVenta,Tipo_Venta
+from tienda.forms import LoginForm,Sign_up_Form,Crear_Producto,Crear_Categoria,Crear_Cliente, Crear_Tipo_Venta
+from tienda.models import Usuario,Rol,Producto,Categoria,Cliente,Venta,DetalleVenta,Tipo_Venta
 from django.contrib import messages
 from django.utils.dateparse import parse_datetime
+from django.db.models.signals import post_migrate
+
 
 
 # Create your views here.
