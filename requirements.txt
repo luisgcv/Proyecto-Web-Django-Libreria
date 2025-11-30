@@ -4,9 +4,11 @@ click==8.3.1
 colorama==0.4.6
 dj-database-url==3.0.1
 Django==5.2.8
+django-phonenumber-field==8.4.0
 gunicorn==23.0.0
 h11==0.16.0
 packaging==25.0
+phonenumbers==9.0.19
 psycopg2-binary==2.9.11
 sqlparse==0.5.4
 tzdata==2025.2
