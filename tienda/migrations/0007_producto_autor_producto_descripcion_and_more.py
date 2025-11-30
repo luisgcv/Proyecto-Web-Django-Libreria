@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0006_remove_detalleventa_precio_unitario'),
+        ('tienda', '0006_remove_detalleventa_precio_unitario'),
     ]
 
     operations = [

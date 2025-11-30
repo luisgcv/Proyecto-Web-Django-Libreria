@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('nombre_usuario', models.CharField(max_length=110, unique=True, verbose_name='Nombre_Usuario')),
                 ('correo_electronico', models.CharField(max_length=110, verbose_name='Correo Electroncio ')),
                 ('password', models.CharField(max_length=110, verbose_name='Contraseña')),
-                ('rol', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='app.rol')),
+                ('rol', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='tienda.rol')),
             ],
             options={
                 'verbose_name': 'Usuario',

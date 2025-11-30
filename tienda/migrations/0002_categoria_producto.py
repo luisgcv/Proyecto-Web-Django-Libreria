@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0001_initial'),
+        ('tienda', '0001_initial'),
     ]
 
     operations = [
@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('precio', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='Precio')),
                 ('cantidad_stock', models.PositiveIntegerField(default=0, verbose_name='Cantidad en Stock')),
                 ('imagen', models.ImageField(default='null', upload_to='productos', verbose_name='Imagen')),
-                ('categoria', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='productos', to='app.categoria', verbose_name='Categoria')),
+                ('categoria', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='productos', to='tienda.categoria', verbose_name='Categoria')),
             ],
         ),
     ]

@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0004_cliente'),
+        ('tienda', '0004_cliente'),
     ]
 
     operations = [
@@ -40,8 +40,8 @@ class Migration(migrations.Migration):
                 ('fecha', models.DateTimeField(default=django.utils.timezone.now, verbose_name='Fecha de Venta')),
                 ('total', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='Total')),
                 ('observaciones', models.TextField(blank=True, null=True, verbose_name='Observaciones')),
-                ('cliente', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.cliente', verbose_name='Cliente')),
-                ('tipo_venta', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.tipo_venta', verbose_name='Tipo de Venta')),
+                ('cliente', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tienda.cliente', verbose_name='Cliente')),
+                ('tipo_venta', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='tienda.tipo_venta', verbose_name='Tipo de Venta')),
             ],
             options={
                 'verbose_name': 'Venta',
@@ -55,8 +55,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('cantidad', models.PositiveIntegerField(verbose_name='Cantidad')),
                 ('precio_unitario', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='Precio Unitario')),
-                ('producto', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.producto', verbose_name='Producto')),
-                ('venta', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.venta', verbose_name='Venta')),
+                ('producto', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='tienda.producto', verbose_name='Producto')),
+                ('venta', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tienda.venta', verbose_name='Venta')),
             ],
             options={
                 'verbose_name': 'Detalle de Venta',

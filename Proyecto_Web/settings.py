@@ -82,12 +82,18 @@ WSGI_APPLICATION = 'Proyecto_Web.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://postgres:postgres@localhost:5432/mysite',
-        conn_max_age=600
-    )
-}
+# Database configuration: prefer DATABASE_URL (Render managed DB). Fall back to sqlite for quick deploys.
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 
@@ -125,15 +131,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
-# This production code might break development mode, so we check whether we're in DEBUG mode
+# Always set STATIC_ROOT so `collectstatic` has a known target in build and production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Optionally include the app's static dir so collectstatic picks it up in all environments
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'tienda', 'static'),
+]
+
+# Use WhiteNoise storage only in production (when DEBUG is False)
 if not DEBUG:
-    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
-    # and renames the files with unique names for each version to support long-term caching
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type

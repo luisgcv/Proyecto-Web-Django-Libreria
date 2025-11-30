@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0005_tipo_venta_alter_categoria_options_and_more'),
+        ('tienda', '0005_tipo_venta_alter_categoria_options_and_more'),
     ]
 
     operations = [
