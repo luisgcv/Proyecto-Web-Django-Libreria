@@ -27,16 +27,20 @@ def login(request):
             try:
                 # Verifica si existe el usuario
                 usuario = Usuario.objects.get(nombre_usuario=username, password=password)
-                
+
                 # Guardar el usuario en la sesión
                 request.session['usuario_id'] = usuario.id
-                request.session['rol'] = usuario.rol.nombre
+                request.session['rol'] = usuario.rol.nombre if usuario.rol else None
 
-                return redirect('home')  
-            
+                return redirect('home')
+
             except Usuario.DoesNotExist:
                 # Usuario no válido
                 formulario.add_error(None, 'Usuario o contraseña incorrectos')
+            except Exception as e:
+                # Capturar errores inesperados (ej. problemas de conexión a BD) y mostrar mensaje genérico
+                formulario.add_error(None, 'Error interno. Intente de nuevo más tarde.')
+                print('Login error:', e)
 
     else:
         formulario = LoginForm()
@@ -48,7 +52,16 @@ def carga_pagina_crear_cuenta(request):
     return render(request,'crear_cuenta.html',{'formulario':formulario})
 
 def guardar_nuevo_usuario(request):
-    rol_preterminado = Rol.objects.get(id=2)
+    # Intentamos obtener un rol por defecto; si no existe lo creamos
+    rol_preterminado = None
+    try:
+        rol_preterminado = Rol.objects.filter(id=2).first()
+        if not rol_preterminado:
+            rol_preterminado, _ = Rol.objects.get_or_create(nombre='usuario')
+    except Exception as e:
+        # Si hay problemas con la BD, dejamos rol_preterminado en None y manejamos más abajo
+        print('Error obteniendo rol por defecto:', e)
+
     if request.method == "POST":
         formulario = Sign_up_Form(request.POST)
         if formulario.is_valid():
