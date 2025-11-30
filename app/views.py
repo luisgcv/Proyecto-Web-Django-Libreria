@@ -7,9 +7,6 @@ from django.utils.dateparse import parse_datetime
 
 # Create your views here.
 
-
-rol_preterminado = Rol.objects.get(id=2)  
-
 def logout_view(request):
     request.session.flush()
     return redirect('login')    
@@ -49,6 +46,7 @@ def carga_pagina_crear_cuenta(request):
     return render(request,'crear_cuenta.html',{'formulario':formulario})
 
 def guardar_nuevo_usuario(request):
+    rol_preterminado = Rol.objects.get(id=2)
     if request.method == "POST":
         formulario = Sign_up_Form(request.POST)
         if formulario.is_valid():

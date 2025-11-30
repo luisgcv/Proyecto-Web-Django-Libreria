@@ -5,3 +5,6 @@ class AppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'app'
     verbose_name="Proyecto Web, Sitio de Libros"
+
+    def ready(self):
+        import app.signals
